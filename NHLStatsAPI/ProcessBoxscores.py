@@ -1,6 +1,6 @@
-from Boxscore import Boxscore
-from Boxscores import Boxscores
-from ProcessAPI import ProcessAPI
+from .Boxscore import Boxscore
+from .Boxscores import Boxscores
+from .ProcessAPI import ProcessAPI
 import pandas as pd
 import time
 

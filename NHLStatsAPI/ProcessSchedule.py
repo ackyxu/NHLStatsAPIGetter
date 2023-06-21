@@ -1,6 +1,6 @@
 from requests import Response
-from ProcessAPI import ProcessAPI
-from ScheduleGames import ScheduleGames
+from .ProcessAPI import ProcessAPI
+from .ScheduleGames import ScheduleGames
 
 
 class ProcessSchedule:

@@ -1,7 +1,6 @@
-from ProcessAPI import ProcessAPI
-from ProcessTeams import ProcessTeams
-from Team import Team
-from Teams import Teams
+from NHLStatsAPI.ProcessTeams import ProcessTeams
+from NHLStatsAPI.Team import Team
+from NHLStatsAPI.Teams import Teams
 
 
 def main():

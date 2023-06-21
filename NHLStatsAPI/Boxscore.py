@@ -1,4 +1,4 @@
-from GameRoster import GameRoster
+from .GameRoster import GameRoster
 
 
 class Boxscore:

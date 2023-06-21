@@ -1,4 +1,4 @@
-from ScheduleGame import ScheduleGame
+from .ScheduleGame import ScheduleGame
 
 
 class ScheduleGames:

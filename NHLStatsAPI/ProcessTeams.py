@@ -1,6 +1,6 @@
 from requests import Response
-from ProcessAPI import ProcessAPI
-from Teams import Teams
+from .ProcessAPI import ProcessAPI
+from .Teams import Teams
 
 class ProcessTeams: 
 

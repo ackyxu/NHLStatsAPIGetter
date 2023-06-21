@@ -1,4 +1,4 @@
-from Boxscore import Boxscore
+from .Boxscore import Boxscore
 
 
 class Boxscores:

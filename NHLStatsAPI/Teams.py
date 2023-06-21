@@ -1,4 +1,4 @@
-from Team import Team
+from .Team import Team
 
 
 class Teams:
