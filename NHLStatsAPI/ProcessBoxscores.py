@@ -8,6 +8,7 @@ import time
 
 
 class ProcessBoxscore:
+    boxscoredDict = {}
     scoresURL: str = r"https://statsapi.web.nhl.com/api/v1/game/%s/boxscore"
     def __init__(self, game_threads = 4, season_threads = 4) -> None:
         self.failedRequest: set(str) = set()
@@ -83,7 +84,10 @@ class ProcessBoxscore:
                 bs = self.getBoxscoresMultiProcess(psList)
             else:
                 bs = self.getBoxscores(psList)
+            self.boxscoredDict[year] = bs
             print(year)
-            self.toCSV(f"./{year}.csv",bs)
-        
+            # self.toCSV(f"./{year}.csv",bs)
+
+    def getBoxscoreDictYear(self, year:int):
+        return self.boxscoredDict[year]
         
