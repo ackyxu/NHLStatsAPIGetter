@@ -46,19 +46,33 @@ class ProcessBoxscore:
             
         
     
-    def toDataFrame(self, bs: Boxscores)-> pd.DataFrame:
+    def toDataFrame(self, bs: Boxscores = None)-> pd.DataFrame:
         dfList = []
-        for id,boxscore in bs.boxscores.items():
-            rosterDictA = boxscore.team_away_roster.gameRoster
-            rosterDictH = boxscore.team_home_roster.gameRoster
+
+        if (bs):
+            for id,boxscore in bs.boxscores.items():
+                rosterDictA = boxscore.team_away_roster.gameRoster
+                rosterDictH = boxscore.team_home_roster.gameRoster
 
 
-            for id, playerStat in rosterDictA.items():
-                dfList.append(playerStat.__dict__)
+                for id, playerStat in rosterDictA.items():
+                    dfList.append(playerStat.__dict__)
 
-            for id, playerStat in rosterDictH.items():
-                dfList.append(playerStat.__dict__)
+                for id, playerStat in rosterDictH.items():
+                    dfList.append(playerStat.__dict__)
+        else:
+            for year,bsr in self.boxscoredDict.items():
+                for id,boxscore in bsr.boxscores.items():
+                    rosterDictA = boxscore.team_away_roster.gameRoster
+                    rosterDictH = boxscore.team_home_roster.gameRoster
 
+
+                    for id, playerStat in rosterDictA.items():
+                        dfList.append(playerStat.__dict__)
+
+                    for id, playerStat in rosterDictH.items():
+                        dfList.append(playerStat.__dict__)
+            
         df = pd.DataFrame(dfList)
         # df.set_index(["id"], inplace=True)
         return df
