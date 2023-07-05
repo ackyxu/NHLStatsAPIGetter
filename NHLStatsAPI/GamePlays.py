@@ -1,4 +1,5 @@
 from .PlayEvent import PlayEvent
+import pandas as pd
 
 class GamePlays:
 
@@ -16,5 +17,24 @@ class GamePlays:
             playEvent = PlayEvent(play)
             playEvents.append(playEvent)
         return playEvents
+
+    def toDataFrame(self)-> pd.DataFrame :
+        eventsList = []
+        for i, event in enumerate(self.playEvents):
+            eventDict = event.toDict(i, self.gameID, self.gameSeason)
+            eventsList.append(eventDict)
+        # df = pd.DataFrame(eventsList)
+        # df = df.set_index("sequence")
+        return pd.DataFrame(eventsList)
+
+
+    def toDict(self)-> dict :
+        eventsList = []
+        for i, event in enumerate(self.playEvents):
+            eventDict = event.toDict(i, self.gameID, self.gameSeason)
+            eventsList.append(eventDict)
+        # df = pd.DataFrame(eventsList)
+        # df = df.set_index("sequence")
+        return eventsList
         
         

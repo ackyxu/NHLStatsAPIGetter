@@ -3,6 +3,7 @@ from .ProcessAPI import ProcessAPI
 from .ProcessSchedule import ProcessSchedule
 from multiprocessing import Pool
 import time
+import pandas as pd
 class ProcessGamePlays:
     gameURL: str = r"https://statsapi.web.nhl.com/api/v1/game/%s/feed/live"
     gamePlaysSeason: dict = {}
@@ -55,3 +56,12 @@ class ProcessGamePlays:
             if result is not None:
                 gamePlays[result[0]] = result[1]
         return gamePlays
+
+    def toDataFrame(self):
+        gameList = []
+        for year,games in self.gamePlaysSeason.items():
+            for gameID,events in games.items():
+                eventsList = events.toDict()
+                gameList += eventsList
+
+        return pd.DataFrame(gameList)

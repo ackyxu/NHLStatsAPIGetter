@@ -1,3 +1,4 @@
+from .ProcessGamePlays import ProcessGamePlays
 from .ProcessBoxscores import ProcessBoxscore
 import sqlite3
 from sqlite3 import Error, Connection
@@ -16,6 +17,13 @@ class ProcessDatabase:
             print(e)
 
 
+    def GamePlaysToDatabase(self, pgp: ProcessGamePlays):
+        df = pgp.toDataFrame()
+        if(self.conn):
+            df.to_sql("GamePlays", self.conn, if_exists="append",index=False)
+        else:
+            print("Error: No Database Connected")
+        
         
     def BoxscoresToDatabase(self, pb: ProcessBoxscore):
         df = pb.toDataFrame()
