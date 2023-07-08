@@ -5,12 +5,13 @@ from .ProcessAPI import ProcessAPI
 import pandas as pd
 from multiprocessing import Pool
 import time
+import os
 
 
 class ProcessBoxscore:
     boxscoredDict = {}
     scoresURL: str = r"https://statsapi.web.nhl.com/api/v1/game/%s/boxscore"
-    def __init__(self, game_threads = 4, season_threads = 4) -> None:
+    def __init__(self, game_threads = os.cpu_count(), season_threads = os.cpu_count()) -> None:
         self.failedRequest: set(str) = set()
         self.game_threads = game_threads
         self.season_threads = season_threads
@@ -46,7 +47,7 @@ class ProcessBoxscore:
             
         
     
-    def toDataFrame(self, bs: Boxscores = None)-> pd.DataFrame:
+    def toDataFrame(self, bs: Boxscores = None, to_dict = False)-> pd.DataFrame:
         dfList = []
 
         if (bs):
@@ -66,33 +67,39 @@ class ProcessBoxscore:
                     rosterDictA = boxscore.team_away_roster.gameRoster
                     rosterDictH = boxscore.team_home_roster.gameRoster
 
-
                     for id, playerStat in rosterDictA.items():
-                        dfList.append(playerStat.__dict__)
+                        psDict = playerStat.__dict__
+                        psDict["year"] = year
+                        dfList.append(psDict)
 
                     for id, playerStat in rosterDictH.items():
-                        dfList.append(playerStat.__dict__)
+                        psDict = playerStat.__dict__
+                        psDict["year"] = year
+                        dfList.append(psDict)
             
-        df = pd.DataFrame(dfList)
         # df.set_index(["id"], inplace=True)
-        return df
+        if to_dict:
+            return dfList
+        else:
+            return pd.DataFrame(dfList)
 
     def toCSV(self, path, bs)-> None:
         df = self.toDataFrame(bs)
         df.to_csv(path)
     
-    def processBoxscores(self, yearRange: tuple[int,int], multi_games=True):
+    def processBoxscores(self, yearRange: tuple[int,int], multi_games=True, ps = None):
         for year in range(yearRange[0],yearRange[1]+1):
-            self.getBoxscoresByYear(year, multi_games = multi_games)
+            self.getBoxscoresByYear(year, multi_games = multi_games, ps=ps)
 
     def processBoxscoresMultiProcess(self, yearRange: tuple[int,int]):
         yearList = range(yearRange[0],yearRange[1]+1)
         pool = Pool(self.season_threads)
         pool.map(self.getBoxscoresByYear,yearList)
 
-    def getBoxscoresByYear(self,year:int, multi_games: bool = False):
-            ps = ProcessSchedule()
-            ps.getSchedule((year,year))
+    def getBoxscoresByYear(self,year:int, multi_games: bool = False, ps=None):
+            if not ps:
+                ps = ProcessSchedule()
+                ps.getSchedule((year,year))
             psList = ps.scheduleByYear[year].getGameIDList()
             if multi_games:
                 bs = self.getBoxscoresMultiProcess(psList)

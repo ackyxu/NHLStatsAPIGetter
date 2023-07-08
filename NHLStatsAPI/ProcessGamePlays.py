@@ -4,21 +4,23 @@ from .ProcessSchedule import ProcessSchedule
 from multiprocessing import Pool
 import time
 import pandas as pd
+import os
 class ProcessGamePlays:
     gameURL: str = r"https://statsapi.web.nhl.com/api/v1/game/%s/feed/live"
     gamePlaysSeason: dict = {}
-    def __init__(self, game_threads = 4, season_threads = 4) -> None:
+    def __init__(self, game_threads = os.cpu_count(), season_threads = os.cpu_count()) -> None:
         self.failedRequest: set(str) = set()
         self.game_threads = game_threads
         self.season_threads = season_threads
 
-    def processGamePlays(self, yearRange: tuple[int,int], multi_games=True):
+    def processGamePlays(self, yearRange: tuple[int,int], multi_games=True, ps=None):
         for year in range(yearRange[0],yearRange[1]+1):
-            self.getGamePlaysByYear(year, multi_games = multi_games)
+            self.getGamePlaysByYear(year, multi_games = multi_games, ps=ps)
 
-    def getGamePlaysByYear(self,year:int, multi_games: bool = False):
-            ps = ProcessSchedule()
-            ps.getSchedule((year,year))
+    def getGamePlaysByYear(self,year:int, multi_games: bool = False, ps=None):
+            if not ps:
+                ps = ProcessSchedule()
+                ps.getSchedule((year,year))
             psList = ps.scheduleByYear[year].getGameIDList()
             if multi_games:
                 gamePlays = self.getGamePlaysMultiProcess(psList)
