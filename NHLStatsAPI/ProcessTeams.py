@@ -1,6 +1,7 @@
 from requests import Response
 from .ProcessAPI import ProcessAPI
 from .Teams import Teams
+import pandas as pd
 
 class ProcessTeams: 
 
@@ -24,7 +25,18 @@ class ProcessTeams:
 				if (response.getStatusCode() == 200):
 					teams: Teams = Teams(response.getJSON())
 					self.teamsDict[year] = teams.teams
-     
+
+	def toDataFrame(self, to_dcit = False):
+		teams = []
+		for year in self.teamsDict:
+			for team in self.teamsDict[year]:
+				teams.append(vars(team))
+		if to_dcit:
+			return teams
+		else:
+			df = (pd.DataFrame(teams)).drop_duplicates(subset=["id", 'abbrv'])
+			return df
+        
      
 					
 

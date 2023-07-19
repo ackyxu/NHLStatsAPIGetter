@@ -1,3 +1,5 @@
+from .ProcessTeams import ProcessTeams
+from .ProcessSchedule import ProcessSchedule
 from .ProcessGamePlays import ProcessGamePlays
 from .ProcessBoxscores import ProcessBoxscore
 import sqlite3
@@ -19,7 +21,21 @@ class ProcessDatabase:
             print("failed")
             print(e)
 
+    def TeamsToDatabase(self, pt: ProcessTeams):
+        df = pt.toDataFrame()
+        if(self.conn):
+            df.to_sql("Teams", self.conn, if_exists="append",index=False)
+        else:
+            print("Error: No Database Connected")
 
+    def ScheduleToDatabase(self, ps: ProcessSchedule):
+        df = ps.toDataFrame()
+        if(self.conn):
+            df.to_sql("Schedule", self.conn, if_exists="append",index=False)
+        else:
+            print("Error: No Database Connected")
+        
+        
     def GamePlaysToDatabase(self, pgp: ProcessGamePlays):
         df = pgp.toDataFrame()
         if(self.conn):
@@ -55,6 +71,16 @@ class ProcessDatabase:
         df = df.drop_duplicates(subset=self.gamePlaysKeys)
         df.to_sql("GamePlays", self.conn,if_exists="replace", index=False)
 
+    def ScheduleDropDuplicate(self):
+        df = pd.read_sql_query("SELECT * FROM Schedule", self.conn)
+        df = df.drop_duplicates(subset="gameID")
+        df.to_sql("Schedule", self.conn,if_exists="replace", index=False)
+
+    def TeamsDropDuplicate(self):
+        df = pd.read_sql_query("SELECT * FROM Teams", self.conn)
+        df = df.drop_duplicates(subset=["id", 'abbrv'])
+        df.to_sql("Teams", self.conn,if_exists="replace", index=False)
+        
     def queryDatabase(self, sql_query: str):
         self.conn.row_factory = sqlite3.Row
         cur = self.conn.cursor()

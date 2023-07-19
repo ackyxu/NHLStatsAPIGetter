@@ -13,7 +13,7 @@ class Team:
         self.teamName = teamJSON["teamName"]
         self.locationName = teamJSON["locationName"]
         self.divisionName = teamJSON["division"]["name"]  
-        self.divisionShortName = teamJSON["division"]["nameShort"] 
+        self.firstYearPlay = teamJSON["firstYearOfPlay"] 
          
         
 		

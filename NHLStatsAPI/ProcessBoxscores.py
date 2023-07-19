@@ -76,8 +76,20 @@ class ProcessBoxscore:
                         psDict = playerStat.__dict__
                         psDict["year"] = year
                         dfList.append(psDict)
-            
+        
         # df.set_index(["id"], inplace=True)
+        numericFeilds = {"assists","goals","shots","hits","faceOffWins","faceOffTaken",
+                         "takeaways", "giveaways"}
+        emptyValue = {" ",''}
+        for line in dfList:
+            for key in line:
+                if key in numericFeilds:
+                    if line[key] not in emptyValue:
+                        line[key] = int(line[key])
+                    else:
+                        line[key] = 0
+    
+
         if to_dict:
             return dfList
         else:

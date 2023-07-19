@@ -13,10 +13,6 @@ class PlayEvent:
         except:
             self.teamID = ""
 
-        try:
-            self.teamTriCode = play["team"]["triCode"]
-        except:
-            self.teamTriCode = ""
 
     def retrievePlayers(self,play):
         output = {}
@@ -35,7 +31,6 @@ class PlayEvent:
                         "season": gameSeason,
                         "gameID" : gameID,
                         "teamID": self.teamID,
-                        "teamTriCode": self.teamTriCode,
                         "playType": self.playType["eventTypeId"],
                         "playTypeSec": "",
                         "period": self.period,
