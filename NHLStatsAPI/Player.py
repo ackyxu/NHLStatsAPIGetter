@@ -1,9 +1,10 @@
 class Player:
-    def __init__(self, playerDict: dict, gameID: int) -> None:
+    def __init__(self, playerDict: dict, gameID: int, teamID:int) -> None:
         self.gameID = gameID
         self.firstname = ""
         self.lastname = ""
         self.id = None
+        self.teamID = teamID
         self.positionName = playerDict["position"]["name"]
         self.positionType = playerDict["position"]["type"]
         self.assists = ""
