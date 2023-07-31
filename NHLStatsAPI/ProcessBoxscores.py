@@ -6,6 +6,7 @@ import pandas as pd
 from multiprocessing import Pool
 import time
 import os
+from datetime import datetime
 
 
 class ProcessBoxscore:
@@ -80,7 +81,8 @@ class ProcessBoxscore:
         # df.set_index(["id"], inplace=True)
         numericFeilds = {"assists","goals","shots","hits","faceOffWins","faceOffTaken",
                          "takeaways", "giveaways"}
-        emptyValue = {" ",''}
+        timeFeilds = {"evenTimeOnIce","powerPlayTimeOnIce", "shortHandedTimeOnIce"}
+        emptyValue = {" ",'',None}
         for line in dfList:
             for key in line:
                 if key in numericFeilds:
@@ -88,6 +90,11 @@ class ProcessBoxscore:
                         line[key] = int(line[key])
                     else:
                         line[key] = 0
+                elif key in timeFeilds:
+                    if line[key] not in emptyValue:
+                        line[key] = (datetime.strptime(line[key],"%M:%S")).time()
+                    else:
+                        line[key] = None
     
 
         if to_dict:
